@@ -1,0 +1,48 @@
+<!-- import for  play.api.Play.getFile()-->
+@import play.api.Play.current 
+
+@additionalHead = {
+	<!-- scripts, links, css go here -->
+}
+
+@NameList(index: Int) = @{
+    index match { case 0 => "Tabea"
+    			  case 1 => "Lui"
+    			  case 2 => "Kilian"
+    			  case 3 => "Matze" }
+    }
+
+@main("Home")(additionalHead) {
+	<!-- Header -->
+    <div class="hero-unit">
+        <h1>Hello, phoenix team!</h1>
+        <p>Die Hausaufgaben sind gemacht! Ein kleiner Login und Upload.<br>
+    		Realisiert mit dem Play Framework + Bootstrap.
+    	</p>
+        <p><a class="btn btn-primary btn-large" href="/upload">Upload &raquo;</a></p>
+      </div>
+      
+      <!-- Display row of users -->
+      <div class="row">
+        @for(i <- 0 to 3) {
+	    <div class="span3">
+	      @if(session.get("loggedInUser") != null && session.get("loggedInUser").equals(NameList(i))){
+	       <font color="#215fbc"><h3>Deine Uploads</h3></font>
+	      }else{<h3>@NameList(i)'s Uploads</h3>}
+	      <p>
+	          <!-- Display uploaded files -->
+	    	  <ul>
+	      	  @play.api.Play.getFile("public/Files/"+NameList(i)).listFiles().map {file => 
+	          	  <li><a href="@routes.Assets.at("Files/Kilian/"+file.getName())"> @file.getName()</a></li>}
+	          </ul>
+	      </p>
+	    </div>
+        } 
+      </div>
+      
+      <!-- Original Dr. Maggus footer -->
+      <div class="navbar navbar-fixed-bottom">
+      	<hr>
+        <p>&nbsp &nbsp &copy; <b>Dr.Maggus</b> ...weil besser!</p>
+      </div>
+ }
